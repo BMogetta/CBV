@@ -6,25 +6,25 @@ on:
 
 jobs:
   update-CBV-index:
- # labels includes [Accepted] ? store DB and upload new .md file : break without commit
+# labels includes [Accepted] ? store DB and upload new .md file : break without commit
     if: contains(${{github.event.issue.labels.*.name}},"Accepted")
     name: folder scan
     runs-on: ubuntu-20.04
     permissions: write-all
+    env: 
+      API_ENDPOINT: ${{secrets.v1_api_graphql}}
+      SUBMITED_ISSUE: ${{github.event.issue}}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
     
-      - name: Setup python
-        uses: actions/setup-python@v4
+      - name: Setup deno
+        uses: denoland/setup-deno@v1
         with:
-          python-version: '3.9'
-          
-      - name: install dependencies
-        run: pip install .github/scripts/requirements.txt
-         
-      - name: execute py script
-        run: python .github/scripts/main.py
+          deno-version: "1.29.1"
+
+      - name: Deno run
+        run: deno run .github/scripts/mod.ts
 
       - name: Commit files
         run: |
