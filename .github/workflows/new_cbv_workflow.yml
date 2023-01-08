@@ -27,13 +27,15 @@ jobs:
           echo ${{env.NEW_CBV_NAME}}
 
       - name: Commit files
+        env: 
+          COMMIT_NAME: ${{env.NEW_CBV_NAME}}
         run: |
           echo ${{steps.deno.outputs.NEW_CBV_NAME}}
           git config --local user.email "action@github.com"
           echo ${{env.NEW_CBV_NAME}}
           git config --local user.name "Github Action"
           git add -A
-          git diff-index --quiet HEAD || (git commit -a -m "docs: Added ${{steps.deno.outputs.NEW_CBV_NAME}}" --allow-empty)
+          git diff-index --quiet HEAD || (git commit -a -m "docs: Added ${{env.COMMIT_NAME}}" --allow-empty)
         
         # automate cbv number here by using env variables
       
