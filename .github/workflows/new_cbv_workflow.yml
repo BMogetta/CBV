@@ -24,12 +24,13 @@ jobs:
         id: deno
         run: |
           deno run --allow-write --allow-read --allow-env .github/scripts/mod.ts "${{ github.event.issue.body }}" ${{ secrets.v1_api_graphql }}
-          echo "NEW_CBV_NAME="${{env.NEW_CBV_NAME}} >> $GITHUB_OUTPUT
+          echo ${{env.NEW_CBV_NAME}}
 
       - name: Commit files
         run: |
           echo ${{steps.deno.outputs.NEW_CBV_NAME}}
           git config --local user.email "action@github.com"
+          echo ${{env.NEW_CBV_NAME}}
           git config --local user.name "Github Action"
           git add -A
           git diff-index --quiet HEAD || (git commit -a -m "docs: Added ${{steps.deno.outputs.NEW_CBV_NAME}}" --allow-empty)
