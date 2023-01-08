@@ -48,7 +48,7 @@ body:
     attributes:
       label: Version affected
       description: Wich version of the blockchain is been affected by this vulnerability?
-      placeholder: i.e.: Bitcoin Core 0.14.x before 0.14.3, 0.15.x before 0.15.2, and 0.16.x before 0.16.3 and Bitcoin Knots 0.14.x through 0.16.x before 0.16.3
+      placeholder: i.e. Bitcoin Core 0.14.x before 0.14.3, 0.15.x before 0.15.2, and 0.16.x before 0.16.3 and Bitcoin Knots 0.14.x through 0.16.x before 0.16.3
     validations:
       required: true
   # component
@@ -57,7 +57,7 @@ body:
     attributes:
       label: Component
       description: Wich component of the blockchain is been affected by this vulnerability?
-      placeholder: i.e.: Consensus/VM/etc
+      placeholder: i.e. Consensus/VM/etc
     validations:
       required: true
   # severity
@@ -75,7 +75,7 @@ body:
     attributes:
       label: Vulnerability Type
       description: What time of vulnerability is been exploited?
-      placeholder:  i.e.: Denial of service
+      placeholder:  i.e. Denial of service
     validations:
       required: true
   # details
@@ -111,11 +111,15 @@ body:
       description: Add some aditional labels, they are usefull to filter information when query
       multiple: true
       options:
-        - Bitcoin
-        - Ethereum
-        - Polygon
-        - Polkadot
+        - Layer 1
+        - Layer 2
   # tests
+  - type: textarea
+    id: tests
+    attributes:
+      label: Test
+      description: Share code to test, display or fix the vulnerability
+      placeholder: Go nuts here
   # aditional_comments
   - type: textarea
     id: aditional_comments
@@ -124,24 +128,6 @@ body:
       description: Share any additional thought that you have about this vulnerability
       placeholder: Go nuts here
   #
-  - type: dropdown
-    id: browsers
-    attributes:
-      label: What browsers are you seeing the problem on?
-      multiple: true
-      options:
-        - Firefox
-        - Chrome
-        - Safari
-        - Microsoft Edge
-  # details
-  - type: textarea
-    id: logs
-    attributes:
-      label: Relevant log output
-      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
-      render: shell
-   
   - type: checkboxes
     id: terms
     attributes:
