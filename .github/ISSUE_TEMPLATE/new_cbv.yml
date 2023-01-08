@@ -33,7 +33,7 @@ body:
     id: blockchain
     attributes:
       label: Blockchain
-      description: What blockchain is been affected by this vulnerability?
+      description: What blockchain is been affected by this vulnerability? Multiple selection is enable
       multiple: true
       options:
         - Bitcoin
@@ -108,7 +108,7 @@ body:
     id: labels
     attributes:
       label: Labels
-      description: Add some aditional labels, they are usefull to filter information when query
+      description: Add some aditional labels for future search queries. Multiple selection is enable
       multiple: true
       options:
         - Layer 1
