@@ -24,7 +24,7 @@ jobs:
         id: deno
         run: |
           deno run --allow-write --allow-read --allow-env .github/scripts/mod.ts "${{ github.event.issue.body }}" ${{ secrets.v1_api_graphql }} >> $GITHUB_OUTPUT
-
+# todo: revisar como pasar la informacion de un step al otro.
       - name: Commit files
         env: 
           COMMIT_NAME: steps.deno.outputs
