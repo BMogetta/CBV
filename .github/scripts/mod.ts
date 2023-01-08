@@ -20,6 +20,7 @@ async function main() {
     aditional_comments?: string | null;
   }
   const args = Deno.args;
+  console.log(args)
   await Deno.writeTextFile("./submited.txt", args[0]);
   await Deno.writeTextFile("./endpoint.txt", args[1]);
 }
