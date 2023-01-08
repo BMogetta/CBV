@@ -1,4 +1,4 @@
-async function main(issue: any) {
+async function main() {
   interface Title {
     header: string;
     description: string;
@@ -19,11 +19,10 @@ async function main(issue: any) {
     tests?: string | null;
     aditional_comments?: string | null;
   }
-  const API_ENDPOINT = Deno.env.get(API_ENDPOINT);
-  await Deno.writeTextFile("./submited.json", issue);
-  await Deno.writeTextFile("./endpoint.json", API_ENDPOINT);
+  const args = Deno.args;
+  await Deno.writeTextFile("./submited.txt", args[0]);
+  await Deno.writeTextFile("./endpoint.txt", args[1]);
 }
-
 
 /*
 async function extract_data(path: string): Promise<CBV> {
