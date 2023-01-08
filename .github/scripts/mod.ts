@@ -27,13 +27,16 @@ async function main(args: any) {
     const current_file_number = Number(dirEntry.name.replace(/\D/g,''));
     if (current_file_number > last_cbv_added) last_cbv_added = current_file_number;
   }
-  // name the next file, replace year that the year is correct
+  // name the next file, allways replace with current year
   const new_cbv_number = (last_cbv_added + 1).toString().slice(2);
   const current_year = (new Date()).getFullYear() - 2000
   const new_cbv_name = `CBV-${current_year}-${new_cbv_number}`
   
   await Deno.writeTextFile(`./issues/${new_cbv_name}.txt`, args[0]);
   await Deno.env.set("NEW_CBV_NAME", new_cbv_name)
+  const get = await Deno.env.get("NEW_CBV_NAME")
+  console.log(get)
+  
   //await Deno.writeTextFile("./endpoint.txt", args[0]); args is working
 }
 

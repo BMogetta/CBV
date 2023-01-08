@@ -21,12 +21,9 @@ jobs:
           deno-version: "1.29.1"
 
       - name: Deno run
-        run: deno run --allow-write --allow-read --allow-env .github/scripts/mod.ts "${{ github.event.issue.body }}" ${{ secrets.v1_api_graphql }}
-
-      - name: testing env
         run: |
-          echo ${{env.NEW_CBV_NAME}}
-          echo $env.NEW_CBV_NAME
+          deno run --allow-write --allow-read --allow-env .github/scripts/mod.ts "${{ github.event.issue.body }}" ${{ secrets.v1_api_graphql }}
+          echo "NEW_CBV_NAME=${{env.NEW_CBV_NAME}}" >> $GITHUB_ENV
 
       - name: Commit files
         run: |
