@@ -12,7 +12,6 @@ jobs:
     runs-on: ubuntu-20.04
     permissions: write-all
     env: 
-      API_ENDPOINT: ${{secrets.v1_api_graphql}}
       SUBMITED_ISSUE: ${{github.event.issue}}
     steps:
       - name: Checkout
@@ -25,6 +24,8 @@ jobs:
 
       - name: Deno run
         run: deno run .github/scripts/mod.ts
+        env: 
+          API_ENDPOINT: ${{secrets.v1_api_graphql}}
 
       - name: Commit files
         run: |
