@@ -21,7 +21,7 @@ jobs:
           deno-version: "1.29.1"
 
       - name: Deno run
-        run: deno run --allow-write --allow-read .github/scripts/mod.ts ${{ github.event.issue.body }} ${{ secrets.v1_api_graphql }}
+        run: deno run --allow-write --allow-read .github/scripts/mod.ts {${{ github.event.issue.body }}} ${{ secrets.v1_api_graphql }}
 
       - name: Commit files
         run: |
