@@ -27,16 +27,30 @@ body:
       placeholder: Here you should place a brief description of the vulnerability
     validations:
       required: true
+  # blockchain
   - type: dropdown
-    id: version
+    id: blockchain
     attributes:
-      label: Version
-      description: What version of our software are you running?
+      label: Blockchain
+      description: What blockchain is been affected by this vulnerability?
+      multiple: true
       options:
-        - 1.0.2 (Default)
-        - 1.0.3 (Edge)
+        - Bitcoin
+        - Ethereum
+        - Polygon
+        - Polkadot
     validations:
       required: true
+  # version_affected
+  - type: textarea
+    id: version_affected
+    attributes:
+      label: Version affected
+      description: Wich version of the blockchain is been affected by this vulnerability?
+      placeholder: Bitcoin Core 0.14.x before 0.14.3, 0.15.x before 0.15.2, and 0.16.x before 0.16.3 and Bitcoin Knots 0.14.x through 0.16.x before 0.16.3
+    validations:
+      required: true
+  #
   - type: dropdown
     id: browsers
     attributes:
