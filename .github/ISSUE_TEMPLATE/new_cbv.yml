@@ -1,26 +1,26 @@
-name: Bug Report
-description: File a bug report
-title: "[Bug]: "
-labels: ["bug", "triage"]
+name: New CBV
+description: File a new vulnerability to CBV database
+title: "[Submit: ]: "
+labels: ["CBV"]
 assignees:
   - octocat
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to fill out this bug report!
+        Thanks for contributing with this project!
   - type: input
-    id: contact
+    id: Title
     attributes:
-      label: Contact Details
-      description: How can we get in touch with you if we need more info?
-      placeholder: ex. email@example.com
+      label: header
+      description: Introduce vulnerability Title
+      placeholder: Your proposed title
     validations:
       required: false
   - type: textarea
-    id: what-happened
+    id: description
     attributes:
-      label: What happened?
+      label: description
       description: Also tell us, what did you expect to happen?
       placeholder: Tell us what you see!
       value: "A bug happened!"
