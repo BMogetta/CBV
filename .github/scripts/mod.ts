@@ -21,13 +21,19 @@ async function main(args: any) {
     tests?: string | null;
     aditional_comments?: string | null;
   }
-  /*
-  for await(const f of Deno.readDir('./issues')) {
-    if(!f.isFile) continue;
-    f.name; //name of the file
+  //lock for the last file added
+  let last_cbv_added = 0
+  for await (const dirEntry of Deno.readDir(`${Deno.cwd()}/issues`)) {
+    const current_file_number = Number(dirEntry.name.replace(/\D/g,''));
+    if (current_file_number > last_cbv_added) last_cbv_added = current_file_number;
   }
-  */
-  await Deno.writeTextFile("./issues/CBV-23-00001.txt", args[0]);
+  // name the next file, replace year that the year is correct
+  const new_cbv_number = (last_cbv_added + 1).toString().slice(2);
+  const current_year = (new Date()).getFullYear() - 2000
+  const new_cbv_name = `CBV-${current_year}-${new_cbv_number}`
+  
+  await Deno.writeTextFile(`./issues/${new_cbv_name}.txt`, args[0]);
+  await Deno.env.set("NEW_CBV_NAME", new_cbv_name)
   //await Deno.writeTextFile("./endpoint.txt", args[0]); args is working
 }
 
