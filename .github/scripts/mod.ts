@@ -23,8 +23,8 @@ async function main(args: any) {
   }
 
   const data = await Deno.readFile("./issue.json")
-  await Deno.writeTextFile("./submited.txt", data);
-  await Deno.writeTextFile("./endpoint.txt", args[0]);
+  await Deno.writeTextFile("./issues/submited.txt", args[0]);
+  //await Deno.writeTextFile("./endpoint.txt", args[0]); args is working
 }
 
 main(args)
