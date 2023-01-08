@@ -1,0 +1,55 @@
+### Title
+
+dasasd
+
+### Short description
+
+asdsdasad
+
+### Blockchain
+
+Polygon
+
+### Version affected
+
+dasdas
+
+### Component
+
+dasasdasd
+
+### Severity
+
+7.5
+
+### Vulnerability Type
+
+dasdassad
+
+### Details
+
+dasasdasdsad
+
+### Recommendation
+
+asdsdasadasd
+
+### References
+
+_No response_
+
+### Labels
+
+_No response_
+
+### Test
+
+_No response_
+
+### Aditional comments
+
+_No response_
+
+### Code of Conduct
+
+- [X] I agree to follow this project's Code of Conduct
