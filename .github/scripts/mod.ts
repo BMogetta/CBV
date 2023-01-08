@@ -1,30 +1,30 @@
-const API_ENDPOINT = Deno.env.get(API_ENDPOINT)
-
 async function main(issue: any) {
+  interface Title {
+    header: string;
+    description: string;
+  }
+  
+  interface CBV {
+    title: Title;
+    id: string;
+    blockchain: string;
+    version_affected: string;
+    component: string;
+    severity: number;
+    vulnerability_type: string;
+    details: string;
+    recommendation: string;
+    references?: string | null;
+    labels?: Array<string> | null;
+    tests?: string | null;
+    aditional_comments?: string | null;
+  }
+  const API_ENDPOINT = Deno.env.get(API_ENDPOINT);
   await Deno.writeTextFile("./submited.json", issue);
   await Deno.writeTextFile("./endpoint.json", API_ENDPOINT);
 }
 
-interface Title {
-  header: string;
-  description: string;
-}
 
-interface CBV {
-  title: Title;
-  id: string;
-  blockchain: string;
-  version_affected: string;
-  component: string;
-  severity: number;
-  vulnerability_type: string;
-  details: string;
-  recommendation: string;
-  references?: string | null;
-  labels?: Array<string> | null;
-  tests?: string | null;
-  aditional_comments?: string | null;
-}
 /*
 async function extract_data(path: string): Promise<CBV> {
   
@@ -74,4 +74,3 @@ function raw_data(readed_data: string): CBV {
   tests:
   aditional_comments: splits[10].replace("Aditional Comments (Optional)", "").trim()
   */
-
