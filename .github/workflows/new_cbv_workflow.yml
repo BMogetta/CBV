@@ -22,7 +22,7 @@ jobs:
 
       - name: Saving event information
         run: |
-          echo ${{ github.event.issue }} > issue.json
+          echo ${{ github.event.issue.issue }} > issue.json
 
       - name: Deno run
         run: deno run --allow-write --allow-read .github/scripts/mod.ts ${{ secrets.v1_api_graphql }}
