@@ -21,9 +21,10 @@ jobs:
           deno-version: "1.29.1"
 
       - name: Deno run
+        id: deno
         run: |
           deno run --allow-write --allow-read --allow-env .github/scripts/mod.ts "${{ github.event.issue.body }}" ${{ secrets.v1_api_graphql }}
-          echo "NEW_CBV_NAME=${{env.NEW_CBV_NAME}}" >> $GITHUB_ENV
+          echo "NEW_CBV_NAME="${{env.NEW_CBV_NAME}} >> $GITHUB_OUTPUT
 
       - name: Commit files
         run: |
@@ -31,7 +32,7 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "Github Action"
           git add -A
-          git diff-index --quiet HEAD || (git commit -a -m "docs: Added ${{env.NEW_CBV_NAME}}" --allow-empty)
+          git diff-index --quiet HEAD || (git commit -a -m "docs: Added ${{steps.deno.outputs.NEW_CBV_NAME}}" --allow-empty)
         
         # automate cbv number here by using env variables
       
