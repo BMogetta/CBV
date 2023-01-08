@@ -16,14 +16,13 @@ body:
       description: Introduce vulnerability Title
       placeholder: Your proposed title
     validations:
-      required: false
+      required: true
   - type: textarea
     id: description
     attributes:
       label: Short description
       description: Please enter a summary of the vulnerability
       placeholder: Here you should place a brief description of the vulnerability
-      value: "A bug happened!"
     validations:
       required: true
   - type: dropdown
