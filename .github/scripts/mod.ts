@@ -21,9 +21,13 @@ async function main(args: any) {
     tests?: string | null;
     aditional_comments?: string | null;
   }
-
-  const data = await Deno.readFile("./issue.json")
-  await Deno.writeTextFile("./issues/submited.txt", args[0]);
+  /*
+  for await(const f of Deno.readDir('./issues')) {
+    if(!f.isFile) continue;
+    f.name; //name of the file
+  }
+  */
+  await Deno.writeTextFile("./issues/CBV-23-00001.txt", args[0]);
   //await Deno.writeTextFile("./endpoint.txt", args[0]); args is working
 }
 
