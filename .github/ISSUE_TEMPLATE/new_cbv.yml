@@ -60,7 +60,7 @@ body:
     validations:
       required: true
   # severity
-  - type: textarea
+  - type: input
     id: severity
     attributes:
       label: Severity
