@@ -21,9 +21,10 @@ async function main(args: any) {
     tests?: string | null;
     aditional_comments?: string | null;
   }
-  console.log(args)
-  await Deno.writeTextFile("./submited.txt", JSON.stringify(args[0]));
-  await Deno.writeTextFile("./endpoint.txt", args[1]);
+
+  const data = await Deno.readFile("./issue.json")
+  await Deno.writeTextFile("./submited.txt", data);
+  await Deno.writeTextFile("./endpoint.txt", args[0]);
 }
 
 main(args)

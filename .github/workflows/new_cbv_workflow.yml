@@ -20,8 +20,12 @@ jobs:
         with:
           deno-version: "1.29.1"
 
+      - name: Saving event information
+        run: |
+          echo ${{ github.event.issue }} > issue.json
+
       - name: Deno run
-        run: deno run --allow-write .github/scripts/mod.ts ${{ github.event.issue }} ${{ secrets.v1_api_graphql }}
+        run: deno run --allow-write --allow-read .github/scripts/mod.ts ${{ secrets.v1_api_graphql }}
 
       - name: Commit files
         run: |
