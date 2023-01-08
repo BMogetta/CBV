@@ -1,8 +1,9 @@
-const SUBMITED_ISSUE = Deno.env.get(SUBMITED_ISSUE)
 const API_ENDPOINT = Deno.env.get(API_ENDPOINT)
 
-await Deno.writeTextFile("./submited.json", SUBMITED_ISSUE);
-await Deno.writeTextFile("./endpoint.json", API_ENDPOINT);
+async function main(issue: any) {
+  await Deno.writeTextFile("./submited.json", issue);
+  await Deno.writeTextFile("./endpoint.json", API_ENDPOINT);
+}
 
 interface Title {
   header: string;

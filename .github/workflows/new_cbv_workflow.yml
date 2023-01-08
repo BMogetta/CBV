@@ -11,8 +11,6 @@ jobs:
     name: folder scan
     runs-on: ubuntu-20.04
     permissions: write-all
-    env: 
-      SUBMITED_ISSUE: ${{github.event.issue}}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -23,9 +21,9 @@ jobs:
           deno-version: "1.29.1"
 
       - name: Deno run
-        run: deno run .github/scripts/mod.ts
+        run: deno run .github/scripts/mod.ts ${{ github.event.issue }}
         env: 
-          API_ENDPOINT: ${{secrets.v1_api_graphql}}
+          API_ENDPOINT: ${{ secrets.v1_api_graphql }}
 
       - name: Commit files
         run: |
