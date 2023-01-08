@@ -24,7 +24,7 @@ jobs:
         id: deno
         run: |
           deno run --allow-write --allow-read --allow-env .github/scripts/mod.ts "${{ github.event.issue.body }}" ${{ secrets.v1_api_graphql }}
-          echo "${{env.NEW_CBV_NAME}}=${{env.NEW_CBV_NAME}}" >> $GITHUB_OUTPUT
+          echo "NEW_CBV_NAME=${{env.NEW_CBV_NAME}}" >> $GITHUB_OUTPUT
 
       - name: Commit files
         env: 
