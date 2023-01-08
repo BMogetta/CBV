@@ -42,7 +42,7 @@ body:
     validations:
       required: true
   # version_affected
-  - type: textarea
+  - type: input
     id: version_affected
     attributes:
       label: Version affected
@@ -51,7 +51,7 @@ body:
     validations:
       required: true
   # component
-  - type: textarea
+  - type: input
     id: component
     attributes:
       label: Component
