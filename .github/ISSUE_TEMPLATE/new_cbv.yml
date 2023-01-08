@@ -9,6 +9,7 @@ body:
     attributes:
       value: |
         Thanks for contributing with this project!
+  # title.header
   - type: input
     id: header
     attributes:
@@ -17,6 +18,7 @@ body:
       placeholder: Your proposed title
     validations:
       required: true
+  # title.description
   - type: textarea
     id: description
     attributes:
@@ -45,12 +47,14 @@ body:
         - Chrome
         - Safari
         - Microsoft Edge
+  # details
   - type: textarea
     id: logs
     attributes:
       label: Relevant log output
       description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
       render: shell
+   
   - type: checkboxes
     id: terms
     attributes:
