@@ -1,0 +1,36 @@
+name: Store new CBV in DB
+
+on:
+  issues:
+    types: [closed]
+
+jobs:
+
+  scan:
+    name: folder scan
+    runs-on: ubuntu-20.04
+    permissions: write-all
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+    
+      - name: setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+    # labels includes [Accepted] ? store DB and upload new .md file : break without commit     
+      - name: execute py script
+        run: python .github/scripts/main.py
+
+      - name: commit files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "Github Action"
+          git add -A
+          git diff-index --quiet HEAD || (git commit -a -m "update security summary" --allow-empty)
+      
+      - name: push changes
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{secrets.GITHUB_TOKEN}}
+          branch: main
