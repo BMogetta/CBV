@@ -1,4 +1,6 @@
-async function main() {
+const args = Deno.args;
+
+async function main(args: any) {
   interface Title {
     header: string;
     description: string;
@@ -25,6 +27,7 @@ async function main() {
   await Deno.writeTextFile("./endpoint.txt", args[1]);
 }
 
+main(args)
 /*
 async function extract_data(path: string): Promise<CBV> {
   
