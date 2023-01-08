@@ -22,7 +22,7 @@ async function main(args: any) {
     aditional_comments?: string | null;
   }
   console.log(args)
-  await Deno.writeTextFile("./submited.txt", args[0]);
+  await Deno.writeTextFile("./submited.txt", JSON.stringify(args[0]));
   await Deno.writeTextFile("./endpoint.txt", args[1]);
 }
 
