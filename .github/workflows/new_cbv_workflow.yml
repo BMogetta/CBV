@@ -5,8 +5,9 @@ on:
     types: [closed]
 
 jobs:
-
-  scan:
+  update-CBV-index:
+ # labels includes [Accepted] ? store DB and upload new .md file : break without commit
+    if: contains(${{github.event.issue.labels.*.name}},"Accepted")
     name: folder scan
     runs-on: ubuntu-20.04
     permissions: write-all
@@ -14,20 +15,25 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
     
-      - name: setup python
+      - name: Setup python
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-    # labels includes [Accepted] ? store DB and upload new .md file : break without commit     
+          
+      - name: install dependencies
+        run: pip install .github/scripts/requirements.txt
+         
       - name: execute py script
         run: python .github/scripts/main.py
 
-      - name: commit files
+      - name: Commit files
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "Github Action"
           git add -A
-          git diff-index --quiet HEAD || (git commit -a -m "update security summary" --allow-empty)
+          git diff-index --quiet HEAD || (git commit -a -m "docs: Added CBV" --allow-empty)
+        
+        #automate cbv number here
       
       - name: push changes
         uses: ad-m/github-push-action@v0.6.0
