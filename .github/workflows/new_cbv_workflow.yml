@@ -24,14 +24,14 @@ jobs:
         id: deno
         run: deno run --allow-write --allow-read --allow-env .github/scripts/mod.ts "${{ github.event.issue.body }}" ${{ secrets.v1_api_graphql }} >> $GITHUB_OUTPUT
 
+      - name: echo
+        run: echo ${{join(steps.deno.outputs.*, '\n')}}
+
 # todo: revisar como pasar la informacion de un step al otro.
       - name: Commit files
-      
         #env: 
         #  COMMIT_NAME: ${{steps.deno.outputs}}
-        run: |
-          echo ${{join(steps.deno.outputs.*, '\n')}}
-          .github/scripts/commit.sh
+        run: .github/scripts/commit.sh
       
       - name: push changes
         uses: ad-m/github-push-action@v0.6.0
