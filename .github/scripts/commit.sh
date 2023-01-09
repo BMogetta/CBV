@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 echo "inicio de echo"
-echo $NEW_CBV_NAME
-echo $COMMIT_NAME
+{ IFS= read -rd '' value <DENO_OUTPUT.txt;} 2>/dev/null
+printf '%s' "$value"
 echo "fin de echo"
 
 
