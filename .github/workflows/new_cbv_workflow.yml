@@ -25,7 +25,7 @@ jobs:
         run: |
           deno run --allow-write --allow-read --allow-env .github/scripts/mod.ts "${{ github.event.issue.body }}" ${{ secrets.v1_api_graphql }}
           git config --local user.email "action@github.com"
-          echo ${{env.NEW_CBV_NAME}}
+          echo ${{env.COMMIT_NAME}}
           git config --local user.name "Github Action"
           git add -A
           git diff-index --quiet HEAD || (git commit -a -m "docs: Added ${{env.COMMIT_NAME}}" --allow-empty)
