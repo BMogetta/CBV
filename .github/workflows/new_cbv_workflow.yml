@@ -26,6 +26,8 @@ jobs:
           touch DENO_OUTPUT
           deno run --allow-write --allow-read --allow-env .github/scripts/mod.ts "${{ github.event.issue.body }}" ${{ secrets.v1_api_graphql }} >> DENO_OUTPUT.txt
           COMMIT_NAME=`cat DENO_OUTPUT`
+          echo `cat DENO_OUTPUT`
+          echo cat DENO_OUTPUT
           echo $COMMIT_NAME
 
 # todo: revisar como pasar la informacion de un step al otro.
