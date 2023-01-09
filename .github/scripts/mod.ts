@@ -35,7 +35,6 @@ async function main(args: any) {
   await Deno.writeTextFile(`./issues/${new_cbv_name}.md`, args[0]);
   //await Deno.writeTextFile("./endpoint.txt", args[0]); args is working
   console.log(new_cbv_name)
-  return new_cbv_name
 }
 
 main(args)
