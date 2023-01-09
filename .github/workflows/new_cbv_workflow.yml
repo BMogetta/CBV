@@ -23,12 +23,12 @@ jobs:
       - name: Deno run & commit files
         id: deno
         run: |
-          deno run --allow-write --allow-read --allow-env .github/scripts/mod.ts "${{ github.event.issue.body }}" ${{ secrets.v1_api_graphql }}
+          COMMIT_NAME = deno run --allow-write --allow-read --allow-env .github/scripts/mod.ts "${{ github.event.issue.body }}" ${{ secrets.v1_api_graphql }}
+          echo ${COMMIT_NAME}
           git config --local user.email "action@github.com"
-          echo ${{env.COMMIT_NAME}}
           git config --local user.name "Github Action"
           git add -A
-          git diff-index --quiet HEAD || (git commit -a -m "docs: Added ${{env.COMMIT_NAME}}" --allow-empty)
+          git diff-index --quiet HEAD || (git commit -a -m "docs: Added ${COMMIT_NAME}" --allow-empty)
       
       - name: push changes
         uses: ad-m/github-push-action@v0.6.0
