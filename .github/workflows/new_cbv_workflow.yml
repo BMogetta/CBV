@@ -27,7 +27,7 @@ jobs:
 # todo: revisar como pasar la informacion de un step al otro.
       - name: Commit files
         env: 
-          COMMIT_NAME: steps.deno.outputs
+          COMMIT_NAME: ${{steps.deno.outputs}}
         run: .github/scripts/commit.sh
       
       - name: push changes
