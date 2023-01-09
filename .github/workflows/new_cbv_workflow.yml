@@ -26,9 +26,12 @@ jobs:
 
 # todo: revisar como pasar la informacion de un step al otro.
       - name: Commit files
-        env: 
-          COMMIT_NAME: ${{steps.deno.outputs}}
-        run: .github/scripts/commit.sh
+      
+        #env: 
+        #  COMMIT_NAME: ${{steps.deno.outputs}}
+        run: |
+          echo ${{steps.deno.outputs}}
+          .github/scripts/commit.sh
       
       - name: push changes
         uses: ad-m/github-push-action@v0.6.0
