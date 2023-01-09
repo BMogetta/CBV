@@ -29,7 +29,7 @@ jobs:
       - name: Commit files
         env: 
           COMMIT_NAME: steps.deno.outputs
-        run: ./github/scripts/commit.sh
+        run: .github\scripts\commit.sh
       
       - name: push changes
         uses: ad-m/github-push-action@v0.6.0
