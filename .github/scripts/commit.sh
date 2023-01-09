@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
-
+echo "inicio de echo"
 echo $NEW_CBV_NAME
 echo $COMMIT_NAME
+echo "fin de echo"
+
 
 git config --local user.email "action@github.com"
 git config --local user.name "Github Action"
