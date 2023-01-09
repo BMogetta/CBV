@@ -23,7 +23,7 @@ jobs:
       - name: Deno run & commit files
         id: deno
         run: |
-          COMMIT_NAME = deno run --allow-write --allow-read --allow-env .github/scripts/mod.ts "${{ github.event.issue.body }}" ${{ secrets.v1_api_graphql }}
+          COMMIT_NAME = ${deno run --allow-write --allow-read --allow-env .github/scripts/mod.ts "${{ github.event.issue.body }}" ${{ secrets.v1_api_graphql }}}
           echo ${COMMIT_NAME}
           git config --local user.email "action@github.com"
           git config --local user.name "Github Action"
