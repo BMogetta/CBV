@@ -33,8 +33,8 @@ async function main(args: any) {
   const new_cbv_name = `CBV-${current_year}-${new_cbv_number}`
   
   await Deno.writeTextFile(`./issues/${new_cbv_name}.md`, args[0]);
-  await Deno.env.set("COMMIT_NAME", new_cbv_name)
-  const get = await Deno.env.get("COMMIT_NAME")
+  await Deno.env.set("NEW_CBV_NAME", new_cbv_name)
+  const get = await Deno.env.get("NEW_CBV_NAME")
   //await Deno.writeTextFile("./endpoint.txt", args[0]); args is working
   return new_cbv_name
 }
