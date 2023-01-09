@@ -30,7 +30,7 @@ jobs:
         #env: 
         #  COMMIT_NAME: ${{steps.deno.outputs}}
         run: |
-          echo ${{steps.deno.outputs}}
+          echo ${{join(steps.deno.outputs.*, '\n')}}
           .github/scripts/commit.sh
       
       - name: push changes
