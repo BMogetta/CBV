@@ -8,4 +8,4 @@ echo "fin de echo"
 git config --local user.email "action@github.com"
 git config --local user.name "Github Action"
 git add -A
-git diff-index --quiet HEAD || (git commit -a -m "docs: Added $COMMIT_NAME" --allow-empty)
+git diff-index --quiet HEAD || (git commit -a -m "docs: Added $value" --allow-empty)
