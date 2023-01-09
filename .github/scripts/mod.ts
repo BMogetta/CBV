@@ -36,6 +36,7 @@ async function main(args: any) {
   await Deno.env.set("NEW_CBV_NAME", new_cbv_name)
   const get = await Deno.env.get("NEW_CBV_NAME")
   //await Deno.writeTextFile("./endpoint.txt", args[0]); args is working
+  console.log(new_cbv_name)
   return new_cbv_name
 }
 
