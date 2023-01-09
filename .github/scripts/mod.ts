@@ -1,26 +1,17 @@
 const args = Deno.args;
+/*
+* First argument is going to be an object containing the new CBV to be added
+* Second argument is the API v1 GraphQL endpoint to store the CBV
+* Third argument is going to be a Key to validate the store endpoint
+*/
+
+main(args)
 
 async function main(args: any) {
-  interface Title {
-    header: string;
-    description: string;
-  }
-  
-  interface CBV {
-    title: Title;
-    id: string;
-    blockchain: string;
-    version_affected: string;
-    component: string;
-    severity: number;
-    vulnerability_type: string;
-    details: string;
-    recommendation: string;
-    references?: string | null;
-    labels?: Array<string> | null;
-    tests?: string | null;
-    aditional_comments?: string | null;
-  }
+
+  //TODO: add key validation to store endpoint
+  //TODO: call store endpoind (CBV, key) and save the new CBV in DB
+
   //lock for the last file added
   let last_cbv_added = 0
   for await (const dirEntry of Deno.readDir(`${Deno.cwd()}/issues`)) {
@@ -31,36 +22,51 @@ async function main(args: any) {
   const new_cbv_number = (last_cbv_added + 1).toString().slice(2);
   const current_year = (new Date()).getFullYear() - 2000
   const new_cbv_name = `CBV-${current_year}-${new_cbv_number}`
+
+  // TODO: Prettify the .md file before storing it in repository
   
+  // Store the new CBV in Issues folder
   await Deno.writeTextFile(`./issues/${new_cbv_name}.md`, args[0]);
-  //await Deno.writeTextFile("./endpoint.txt", args[0]); args is working
+
+  //TODO: optional. Ask to store in folder "Issues" or "Issues/<given_blockchain>"
+
+
+  /*
+  * Log the CBV code to grab it in github actions
+  */
   console.log(new_cbv_name)
 }
 
-main(args)
-/*
-async function extract_data(path: string): Promise<CBV> {
-  
-  try {
-    const readed_data = await Deno.readTextFile(path);
-    const processed_data = raw_data(readed_data);
-    const formated_data = JSON.stringify(processed_data);
-    await Deno.writeTextFile("./extracted_data.json", formated_data);
-    return processed_data;
-  } catch (error) {
-    return error.message;
-  }
+interface Title {
+  header: string;
+  description: string;
 }
 
+interface CBV {
+  title: Title;
+  id: string;
+  blockchain: string;
+  version_affected: string;
+  component: string;
+  severity: number;
+  vulnerability_type: string;
+  details: string;
+  recommendation: string;
+  references?: string | null;
+  labels?: Array<string> | null;
+  tests?: string | null;
+  aditional_comments?: string | null;
+}
+
+// TODO: re write the original function that work locally to work with the object given by github issue event
 function raw_data(readed_data: string): CBV {
   // split on title indicator and deleting every empty item
-  const splits = readed_data.split("##").filter((a) => a);
+  const splits = readed_data.split("###").filter((a) => a);
   const formating_title = splits[0].slice(2).split("\r\n").filter((a) => a);
   const formated_title = {
     header: formating_title[0].trim(),
     description: formating_title[1].trim(),
   };
-  //TODO: buscar como revisar si estan o no los opcionales y agregarlos al objecto
 
   const response_object: CBV = {
     title: formated_title,
@@ -75,15 +81,12 @@ function raw_data(readed_data: string): CBV {
   };
   if (splits.length === 9) return response_object;
 
-  //const optionals = splits.slice(9)
+  /* Add
+  *References
+  *Labels
+  * Test
+  * Aditional comments
+  */
   
   return response_object;
-
-  */
-  /*
-  TODO: terminar los if con los casos opcionales
-  references: splits[9].replace("References (Optional)", "").trim(),
-  labels:
-  tests:
-  aditional_comments: splits[10].replace("Aditional Comments (Optional)", "").trim()
-  */
+}
