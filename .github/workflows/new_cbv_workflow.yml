@@ -20,15 +20,16 @@ jobs:
         with:
           deno-version: "1.29.1"
 
-      - name: Deno run & commit files
+      - name: Deno run
         id: deno
         run: |
-          COMMIT_NAME = ${deno run --allow-write --allow-read --allow-env .github/scripts/mod.ts "${{ github.event.issue.body }}" ${{ secrets.v1_api_graphql }}}
-          echo ${COMMIT_NAME}
-          git config --local user.email "action@github.com"
-          git config --local user.name "Github Action"
-          git add -A
-          git diff-index --quiet HEAD || (git commit -a -m "docs: Added ${COMMIT_NAME}" --allow-empty)
+          deno run --allow-write --allow-read --allow-env .github/scripts/mod.ts "${{ github.event.issue.body }}" ${{ secrets.v1_api_graphql }}
+
+# todo: revisar como pasar la informacion de un step al otro.
+      - name: Commit files
+        env: 
+          COMMIT_NAME: steps.deno.outputs
+        run: ./github/scripts/commit.sh
       
       - name: push changes
         uses: ad-m/github-push-action@v0.6.0
