@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 { IFS= read -rd '' value <DENO_OUTPUT.txt;} 2>/dev/null
+printf '%s' "$value"
 
 git config --local user.email "action@github.com"
 git config --local user.name "Github Action"
