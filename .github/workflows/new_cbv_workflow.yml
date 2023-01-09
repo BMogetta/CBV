@@ -23,6 +23,7 @@ jobs:
       - name: Deno run
         id: deno
         run: |
+          touch DENO_OUTPUT.txt
           deno run --allow-write --allow-read --allow-env .github/scripts/mod.ts "${{ github.event.issue.body }}" ${{ secrets.v1_api_graphql }} >> DENO_OUTPUT.txt
     
       - name: Commit files
