@@ -161,7 +161,6 @@ function breakdown_form ( issue_form: string, new_cbv_code_name: string ): CBV{
     created_at: now,
     updated_at: ""
   }
-  console.log(form_object)
   return form_object
 }
 
