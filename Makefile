@@ -2,6 +2,6 @@ push:
 	git pull && git update-index --chmod=+x .github/scripts/commit.sh && git add . && git commit -m "ci: write file and commit script working" && git push
 
 run: 
-	deno run --allow-write --allow-read --allow-env .github/scripts/mod.ts "test"
+	deno run --allow-write --allow-read --allow-env .github/scripts/mod.ts "test" "dsaa" "adads"
 
 PHONY: push run 

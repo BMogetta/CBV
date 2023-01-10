@@ -11,8 +11,7 @@ async function main(args: string[]) {
   const raw_form_data = args[0];
   const api_endpoint = args[1];
   const api_key = args[2];
-  //TODO: add key validation to store endpoint
-  //TODO: call store endpoind (CBV, key) and save the new CBV in DB
+  
 
   // create a new cbv
   const new_cbv_code_name = await get_new_cbv_code_name ();
@@ -22,13 +21,17 @@ async function main(args: string[]) {
   const cbv_ready_to_be_stored = prettify(brokedown_form)
   // Store the new CBV in Issues folder TODO: check if multiples bc gives back string or array
   await Deno.writeTextFile(`./issues/${new_cbv_code_name}.md`, cbv_ready_to_be_stored);
-
   //TODO: optional. Ask to store in folder "Issues" or "Issues/<given_blockchain>"
+  // TODO: ask for created at field and should we store created at in .md
+  //TODO: add key validation to store endpoint
+  //TODO: call store endpoind (CBV, key) and save the new CBV in DB
+  await store_new_cbv(brokedown_form, api_endpoint, api_key);
 
   /*
   * Log the CBV code to grab it in github actions
   */
   console.log(new_cbv_code_name)
+  return new_cbv_code_name
 }
 
 
@@ -125,4 +128,8 @@ interface CBV {
   labels: string;
   tests: string;
   aditional_comments: string;
+}
+
+async function store_new_cbv(obj_data: CBV, api_endpoint: string, api_key: string) {
+  
 }
