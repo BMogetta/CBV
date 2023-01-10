@@ -1,4 +1,5 @@
 import { createHash } from "https://deno.land/std@0.66.0/hash/mod.ts";
+import { ensureDir } from "https://deno.land/std@0.171.0/fs/mod.ts";
 const data_given_by_gh: string[] = Deno.args;
 /*
 * First argument is going to be an object containing the new CBV to be added
@@ -6,13 +7,68 @@ const data_given_by_gh: string[] = Deno.args;
 * Third argument is going to be a Key to validate the store endpoint
 */
 
-main(data_given_by_gh)
+const MARKDOWN = `### Title
+  
+New test 
 
+### Short description
+
+ new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test 
+
+### Blockchain
+
+Bitcoin
+
+### Version affected
+
+ new test new test new test  new test new test new test 
+
+### Component
+
+ new test new test new test 
+
+### Severity
+
+9.5
+
+### Vulnerability Type
+
+NEW VULNERABILITY
+
+### Details
+
+ new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test 
+
+### Recommendation
+
+ new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test 
+
+### References
+
+_No response_
+
+### Labels
+
+Layer 1, Layer 2
+
+### Test
+
+_No response_
+
+### Aditional comments
+
+_No response_
+
+### Code of Conduct
+
+- [X] I agree to follow this project's Code of Conduct`
+
+main(data_given_by_gh)
 async function main(args: string[]) {
 
   const hashed_api_key = createHash("keccak256").update(args[0]).toString();
   
-  const raw_form_data = args[0];
+  const raw_form_data = args[0] || MARKDOWN;
   const api_endpoint = args[1];
   const api_key = hashed_api_key;
   
@@ -24,9 +80,8 @@ async function main(args: string[]) {
   // create a beautiful .md file to be store in issues
   const cbv_ready_to_be_stored = prettify(brokedown_form)
   // Store the new CBV in Issues folder TODO: check if multiples bc gives back string or array
-  await store_new_cbv_in_folder(new_cbv_code_name, cbv_ready_to_be_stored);
-  
-  //TODO: optional. Ask to store in folder "Issues" or "Issues/<given_blockchain>"
+  await store_new_cbv_in_folder(new_cbv_code_name, cbv_ready_to_be_stored, brokedown_form);
+
   //TODO: call store endpoind (CBV, key) and save the new CBV in DB
   await store_new_cbv_in_db(brokedown_form, api_endpoint, api_key);
 
@@ -40,31 +95,21 @@ async function main(args: string[]) {
 
 async function get_new_cbv_code_name (): Promise<string> {
 
+  const currentPath = `${Deno.cwd()}/issues`  
+  const list_of_all_md = await get_file_names(currentPath)
+
   let last_cbv_added = 0
-  const currentPath = `${Deno.cwd()}/issues`
-  const list_of_dir = await find_all_dir(currentPath);
 
-  async function find_all_dir(path:string): Promise<string[]> {
-    const folders: string[] = [];
-    for await (const dirEntry of Deno.readDir(path)) {
-      if (dirEntry.isDirectory) {
-        folders.push(`${dirEntry}`);
-      }
-    }
-    return folders
+  list_of_all_md.flat(2).forEach(file_name => {
+    const current_file_number = Number(file_name.replace(/\D/g,''));
+    if (current_file_number > last_cbv_added) last_cbv_added = current_file_number;
+  });
+  /*
+  for await (const dirEntry of Deno.readDir(`${Deno.cwd()}/issues`)) {
+    const current_file_number = Number(dirEntry.name.replace(/\D/g,''));
+    if (current_file_number > last_cbv_added) last_cbv_added = current_file_number;
   }
-  const list_of_files = find_all_files(list_of_dir);
-
-  async function find_all_files(_list_of_dir: string[]): Promise<string[]> {
-    const files: string[]= [];
-    for await (const folder of _list_of_dir) {
-      for await (const dirEntry of Deno.readDir(folder)) {
-        const current_file_number = Number(dirEntry.name.replace(/\D/g,''));
-        if (current_file_number > last_cbv_added) last_cbv_added = current_file_number;
-      }
-    }
-    return files
-  }
+  */
 
   // name the next file, allways replace with current year
   const new_cbv_number = (last_cbv_added + 1).toString().slice(2);
@@ -73,20 +118,24 @@ async function get_new_cbv_code_name (): Promise<string> {
   return new_cbv_name
 }
 
-  async function getNames(currentPath: string) {
-    const names: string[] = [];
-  
-    for await (const dirEntry of Deno.readDir(currentPath)) {
-      const entryPath = `${currentPath}/${dirEntry.name}`;
-      names.push(entryPath);
-  
-      if (dirEntry.isDirectory) {
-        names.push(await getNames(entryPath));
-      }
+/*
+* Recursive function to get all files in issues folder
+*/
+
+async function get_file_names(currentPath: string): Promise<string[]> {
+  const file_names: string[] = [];
+
+  for await (const dirEntry of Deno.readDir(currentPath)) {
+    const entryPath = `${currentPath}/${dirEntry.name}`;
+    file_names.push(entryPath);
+
+    if (dirEntry.isDirectory) { //Deno lint can't process this recursion.. code worked fine.
+      file_names.push(await get_file_names(entryPath));
     }
-  
-    return names;
   }
+
+  return file_names;
+}
 
 /*
 * Recieve issues form from github and output an object
@@ -95,20 +144,20 @@ function breakdown_form ( issue_form: string, new_cbv_code_name: string ): CBV{
   const now = getCurrentDate();
   const split = issue_form.split('###')
   const form_object = {
-    title: split[1].replace("Title", "").trim(),
-    short_description: split[2].replace("Short description", "").trim(),
+    title: split[1].replace(/Title/, "").trim(),
+    short_description: split[2].replace(/Short description/, "").trim(),
     cbv_id: new_cbv_code_name,
     blockchain: split[3].replace(/Blockchain/, "").trim(),
-    version_affected: split[4].replace("Version affected", "").trim(),
+    version_affected: split[4].replace(/Version affected/, "").trim(),
     component: split[5].replace(/Component/, "").trim(),
     severity: split[6].replace(/Severity/, "").trim(),
-    vulnerability_type: split[7].replace("Vulnerability Type", "").trim(),
+    vulnerability_type: split[7].replace(/Vulnerability Type/, "").trim(),
     details: split[8].replace(/Details/, "").trim(),
     recommendation: split[9].replace(/Recommendation/, "").trim(),
     references: split[10].replace(/References/, "").trim(),
-    labels: split[11].replace("Labels", "").trim(),
+    labels: split[11].replace(/Labels/, "").trim(),
     tests: split[12].replace(/Test/, "").trim(),
-    aditional_comments: split[13].replace("Aditional comments", "").trim(),
+    aditional_comments: split[13].replace(/Aditional comments/, "").trim(),
     created_at: now,
     updated_at: ""
   }
@@ -181,9 +230,19 @@ function getCurrentDate() {
   return date;
 }
 
-// TODO: function to store in every folder
-async function store_new_cbv_in_folder(_new_cbv_code_name, _cbv_ready_to_be_stored) {
-  await Deno.writeTextFile(`./issues/${_new_cbv_code_name}.md`, _cbv_ready_to_be_stored);
+async function store_new_cbv_in_folder(_new_cbv_code_name: string, _cbv_ready_to_be_stored: string, _cbv_obj: CBV) {
+  const get_subfolders: Array<string> = _cbv_obj.blockchain.split(", ")
+  // create any blockchain folder that doesn't exist
+  for await (const subfolder of get_subfolders) {
+    const path = `${Deno.cwd()}/issues/${subfolder}`
+    ensureDir(path);
+  }
+  // store CBV in all it's corresponding directories
+  for await (const subfolder of get_subfolders) {
+    const path = `${Deno.cwd()}/issues/${subfolder}`
+    await Deno.writeTextFile(`${path}/${_new_cbv_code_name}.md`, _cbv_ready_to_be_stored);
+  }
+  
 }
 
 async function store_new_cbv_in_db(_obj_data: CBV, _api_endpoint: string, _api_key: string) {
