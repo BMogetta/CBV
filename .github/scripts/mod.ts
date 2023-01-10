@@ -1,3 +1,4 @@
+import { createHash } from "https://deno.land/std@0.66.0/hash/mod.ts";
 const data_given_by_gh: string[] = Deno.args;
 /*
 * First argument is going to be an object containing the new CBV to be added
@@ -8,9 +9,12 @@ const data_given_by_gh: string[] = Deno.args;
 main(data_given_by_gh)
 
 async function main(args: string[]) {
+
+  const hashed_api_key = createHash("keccak256").update(args[0]).toString();
+  
   const raw_form_data = args[0];
   const api_endpoint = args[1];
-  const api_key = args[2];
+  const api_key = hashed_api_key;
   
 
   // create a new cbv
@@ -20,12 +24,11 @@ async function main(args: string[]) {
   // create a beautiful .md file to be store in issues
   const cbv_ready_to_be_stored = prettify(brokedown_form)
   // Store the new CBV in Issues folder TODO: check if multiples bc gives back string or array
-  await Deno.writeTextFile(`./issues/${new_cbv_code_name}.md`, cbv_ready_to_be_stored);
+  await store_new_cbv_in_folder(new_cbv_code_name, cbv_ready_to_be_stored);
+  
   //TODO: optional. Ask to store in folder "Issues" or "Issues/<given_blockchain>"
-  // TODO: ask for created at field and should we store created at in .md
-  //TODO: add key validation to store endpoint
   //TODO: call store endpoind (CBV, key) and save the new CBV in DB
-  await store_new_cbv(brokedown_form, api_endpoint, api_key);
+  await store_new_cbv_in_db(brokedown_form, api_endpoint, api_key);
 
   /*
   * Log the CBV code to grab it in github actions
@@ -52,7 +55,7 @@ async function get_new_cbv_code_name (): Promise<string> {
 * Recieve issues form from github and output an object
 */
 function breakdown_form ( issue_form: string, new_cbv_code_name: string ): CBV{
-  
+  const now = getCurrentDate();
   const split = issue_form.split('###')
   const form_object = {
     title: split[1].replace("Title", "").trim(),
@@ -69,6 +72,8 @@ function breakdown_form ( issue_form: string, new_cbv_code_name: string ): CBV{
     labels: split[11].replace("Labels", "").trim(),
     tests: split[12].replace(/Test/, "").trim(),
     aditional_comments: split[13].replace("Aditional comments", "").trim(),
+    created_at: now,
+    updated_at: ""
   }
   console.log(form_object)
   return form_object
@@ -86,6 +91,7 @@ ${form_object.short_description}
 ### Component: ${form_object.component}
 ### Severity: ${form_object.severity}
 ### Vulnerability Type: ${form_object.vulnerability_type}
+### Last updated: ${form_object.created_at}
 
 ## Details
 
@@ -128,8 +134,21 @@ interface CBV {
   labels: string;
   tests: string;
   aditional_comments: string;
+  created_at: string;
+  updated_at: string;
 }
 
-async function store_new_cbv(obj_data: CBV, api_endpoint: string, api_key: string) {
+function getCurrentDate() {
+  const timeStamp = new Date().toUTCString().split(" ");
+  const date = `${timeStamp[1]} ${timeStamp[2]} ${timeStamp[3]}`;
+  return date;
+}
+
+// TODO: function to store in every folder
+async function store_new_cbv_in_folder(_new_cbv_code_name, _cbv_ready_to_be_stored) {
+  await Deno.writeTextFile(`./issues/${_new_cbv_code_name}.md`, _cbv_ready_to_be_stored);
+}
+
+async function store_new_cbv_in_db(_obj_data: CBV, _api_endpoint: string, _api_key: string) {
   
 }
