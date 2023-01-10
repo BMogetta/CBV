@@ -39,17 +39,54 @@ async function main(args: string[]) {
 
 
 async function get_new_cbv_code_name (): Promise<string> {
+
   let last_cbv_added = 0
-  for await (const dirEntry of Deno.readDir(`${Deno.cwd()}/issues`)) {
-    const current_file_number = Number(dirEntry.name.replace(/\D/g,''));
-    if (current_file_number > last_cbv_added) last_cbv_added = current_file_number;
+  const currentPath = `${Deno.cwd()}/issues`
+  const list_of_dir = await find_all_dir(currentPath);
+
+  async function find_all_dir(path:string): Promise<string[]> {
+    const folders: string[] = [];
+    for await (const dirEntry of Deno.readDir(path)) {
+      if (dirEntry.isDirectory) {
+        folders.push(`${dirEntry}`);
+      }
+    }
+    return folders
   }
+  const list_of_files = find_all_files(list_of_dir);
+
+  async function find_all_files(_list_of_dir: string[]): Promise<string[]> {
+    const files: string[]= [];
+    for await (const folder of _list_of_dir) {
+      for await (const dirEntry of Deno.readDir(folder)) {
+        const current_file_number = Number(dirEntry.name.replace(/\D/g,''));
+        if (current_file_number > last_cbv_added) last_cbv_added = current_file_number;
+      }
+    }
+    return files
+  }
+
   // name the next file, allways replace with current year
   const new_cbv_number = (last_cbv_added + 1).toString().slice(2);
   const current_year = (new Date()).getFullYear() - 2000
   const new_cbv_name = `CBV-${current_year}-${new_cbv_number}`
   return new_cbv_name
 }
+
+  async function getNames(currentPath: string) {
+    const names: string[] = [];
+  
+    for await (const dirEntry of Deno.readDir(currentPath)) {
+      const entryPath = `${currentPath}/${dirEntry.name}`;
+      names.push(entryPath);
+  
+      if (dirEntry.isDirectory) {
+        names.push(await getNames(entryPath));
+      }
+    }
+  
+    return names;
+  }
 
 /*
 * Recieve issues form from github and output an object
