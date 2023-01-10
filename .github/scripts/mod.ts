@@ -1,18 +1,38 @@
-const args = Deno.args;
+const data_given_by_gh: string[] = Deno.args;
 /*
 * First argument is going to be an object containing the new CBV to be added
 * Second argument is the API v1 GraphQL endpoint to store the CBV
 * Third argument is going to be a Key to validate the store endpoint
 */
 
-main(args)
+main(data_given_by_gh)
 
-async function main(args: any) {
-
+async function main(args: string[]) {
+  const raw_form_data = args[0];
+  const api_endpoint = args[1];
+  const api_key = args[2];
   //TODO: add key validation to store endpoint
   //TODO: call store endpoind (CBV, key) and save the new CBV in DB
 
-  //lock for the last file added
+  // create a new cbv
+  const new_cbv_code_name = await get_new_cbv_code_name ();
+  // extract informatio from form string into an object
+  const brokedown_form = breakdown_form(raw_form_data, new_cbv_code_name);
+  // create a beautiful .md file to be store in issues
+  const cbv_ready_to_be_stored = prettify(brokedown_form)
+  // Store the new CBV in Issues folder TODO: check if multiples bc gives back string or array
+  await Deno.writeTextFile(`./issues/${new_cbv_code_name}.md`, cbv_ready_to_be_stored);
+
+  //TODO: optional. Ask to store in folder "Issues" or "Issues/<given_blockchain>"
+
+  /*
+  * Log the CBV code to grab it in github actions
+  */
+  console.log(new_cbv_code_name)
+}
+
+
+async function get_new_cbv_code_name (): Promise<string> {
   let last_cbv_added = 0
   for await (const dirEntry of Deno.readDir(`${Deno.cwd()}/issues`)) {
     const current_file_number = Number(dirEntry.name.replace(/\D/g,''));
@@ -22,71 +42,87 @@ async function main(args: any) {
   const new_cbv_number = (last_cbv_added + 1).toString().slice(2);
   const current_year = (new Date()).getFullYear() - 2000
   const new_cbv_name = `CBV-${current_year}-${new_cbv_number}`
-
-  // TODO: Prettify the .md file before storing it in repository
-  
-  // Store the new CBV in Issues folder
-  await Deno.writeTextFile(`./issues/${new_cbv_name}.md`, args[0]);
-
-  //TODO: optional. Ask to store in folder "Issues" or "Issues/<given_blockchain>"
-
-
-  /*
-  * Log the CBV code to grab it in github actions
-  */
-  console.log(new_cbv_name)
+  return new_cbv_name
 }
 
-interface Title {
-  header: string;
-  description: string;
+/*
+* Recieve issues form from github and output an object
+*/
+function breakdown_form ( issue_form: string, new_cbv_code_name: string ): CBV{
+  
+  const split = issue_form.split('###')
+  const form_object = {
+    title: split[1].replace("Title", "").trim(),
+    short_description: split[2].replace("Short description", "").trim(),
+    cbv_id: new_cbv_code_name,
+    blockchain: split[3].replace(/Blockchain/, "").trim(),
+    version_affected: split[4].replace("Version affected", "").trim(),
+    component: split[5].replace(/Component/, "").trim(),
+    severity: split[6].replace(/Severity/, "").trim(),
+    vulnerability_type: split[7].replace("Vulnerability Type", "").trim(),
+    details: split[8].replace(/Details/, "").trim(),
+    recommendation: split[9].replace(/Recommendation/, "").trim(),
+    references: split[10].replace(/References/, "").trim(),
+    labels: split[11].replace("Labels", "").trim(),
+    tests: split[12].replace(/Test/, "").trim(),
+    aditional_comments: split[13].replace("Aditional comments", "").trim(),
+  }
+  console.log(form_object)
+  return form_object
+}
+
+function prettify (form_object: CBV): string {
+
+  const formated_cbv_as_md = `# ${form_object.title}
+  
+${form_object.short_description}
+  
+### CBV:ID ${form_object.cbv_id}
+### Blockchain: ${form_object.blockchain}
+### Version affected: ${form_object.version_affected}
+### Component: ${form_object.component}
+### Severity: ${form_object.severity}
+### Vulnerability Type: ${form_object.vulnerability_type}
+
+## Details
+
+${form_object.details}
+
+## Recomendations
+
+${form_object.recommendation}
+
+## References
+
+${form_object.references}
+
+### Labels: ${form_object.labels}
+
+## Test
+
+${form_object.tests}
+
+## Aditional comments
+
+${form_object.aditional_comments}
+`
+
+  return formated_cbv_as_md.replace(/_No response_/g, "-")
 }
 
 interface CBV {
-  title: Title;
-  id: string;
+  title: string;
+  short_description: string;
+  cbv_id: string;
   blockchain: string;
   version_affected: string;
   component: string;
-  severity: number;
+  severity: string;
   vulnerability_type: string;
   details: string;
   recommendation: string;
-  references?: string | null;
-  labels?: Array<string> | null;
-  tests?: string | null;
-  aditional_comments?: string | null;
-}
-
-// TODO: re write the original function that work locally to work with the object given by github issue event
-function raw_data(readed_data: string): CBV {
-  // split on title indicator and deleting every empty item
-  const splits = readed_data.split("###").filter((a) => a);
-  const formating_title = splits[0].slice(2).split("\r\n").filter((a) => a);
-  const formated_title = {
-    header: formating_title[0].trim(),
-    description: formating_title[1].trim(),
-  };
-
-  const response_object: CBV = {
-    title: formated_title,
-    id: splits[1].replace("# ID:", "").trim(),
-    blockchain: splits[2].replace("# Blockchain:", "").trim(),
-    version_affected: splits[3].replace("# Version affected:", "").trim(),
-    component: splits[4].replace("# Component:", "").trim(),
-    severity: Number(splits[5].replace("# Severity:", "").trim()),
-    vulnerability_type: splits[6].replace("# Vulnerability Type:", "").trim(),
-    details: splits[7].replace("Details", "").trim(),
-    recommendation: splits[8].replace("Recommendation", "").trim(),
-  };
-  if (splits.length === 9) return response_object;
-
-  /* Add
-  *References
-  *Labels
-  * Test
-  * Aditional comments
-  */
-  
-  return response_object;
+  references: string;
+  labels: string;
+  tests: string;
+  aditional_comments: string;
 }
