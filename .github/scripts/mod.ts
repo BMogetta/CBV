@@ -1,10 +1,11 @@
-import { createHash } from "https://deno.land/std@0.66.0/hash/mod.ts";
+import { KeyStack  } from "https://deno.land/std@0.170.0/crypto/mod.ts";
 import { ensureDir } from "https://deno.land/std@0.171.0/fs/mod.ts";
 const data_given_by_gh: string[] = Deno.args;
 /*
 * First argument is going to be an object containing the new CBV to be added
 * Second argument is the API v1 GraphQL endpoint to store the CBV
-* Third argument is going to be a Key to validate the store endpoint
+* Third argument is going to be the first Key to validate the store endpoint
+* Forth argument is going to be the second Key to validate the store endpoint
 */
 
 const MARKDOWN = `### Title
@@ -66,24 +67,25 @@ _No response_
 main(data_given_by_gh)
 async function main(args: string[]) {
 
-  const hashed_api_key = createHash("keccak256").update(args[0]).toString();
+  const keyStack = new KeyStack([args[2]]);
+  const digest = await keyStack.sign([args[3]]);
   
   const raw_form_data = args[0] || MARKDOWN;
   const api_endpoint = args[1];
-  const api_key = hashed_api_key;
+  const api_key = digest;
   
 
   // create a new cbv
   const new_cbv_code_name = await get_new_cbv_code_name ();
   // extract informatio from form string into an object
-  const brokedown_form = breakdown_form(raw_form_data, new_cbv_code_name);
+  const brokedown_form = breakdown_form(raw_form_data, new_cbv_code_name, api_key);
   // create a beautiful .md file to be store in issues
   const cbv_ready_to_be_stored = prettify(brokedown_form)
   // Store the new CBV in Issues folder TODO: check if multiples bc gives back string or array
   await store_new_cbv_in_folder(new_cbv_code_name, cbv_ready_to_be_stored, brokedown_form);
 
   //TODO: call store endpoind (CBV, key) and save the new CBV in DB
-  await store_new_cbv_in_db(brokedown_form, api_endpoint, api_key);
+  await store_new_cbv_in_db(brokedown_form, api_endpoint);
 
   /*
   * Log the CBV code to grab it in github actions
@@ -140,7 +142,7 @@ async function get_file_names(currentPath: string): Promise<string[]> {
 /*
 * Recieve issues form from github and output an object
 */
-function breakdown_form ( issue_form: string, new_cbv_code_name: string ): CBV{
+function breakdown_form ( issue_form: string, new_cbv_code_name: string, _api_key: string ): CBV{
   const now = getCurrentDate();
   const split = issue_form.split('###')
   const form_object = {
@@ -159,7 +161,8 @@ function breakdown_form ( issue_form: string, new_cbv_code_name: string ): CBV{
     tests: split[12].replace(/Test/, "").trim(),
     aditional_comments: split[13].replace(/Aditional comments/, "").trim(),
     created_at: now,
-    updated_at: ""
+    updated_at: "",
+    api_key: _api_key
   }
   return form_object
 }
@@ -221,6 +224,7 @@ interface CBV {
   aditional_comments: string;
   created_at: string;
   updated_at: string;
+  api_key: string;
 }
 
 function getCurrentDate() {
@@ -244,6 +248,12 @@ async function store_new_cbv_in_folder(_new_cbv_code_name: string, _cbv_ready_to
   
 }
 
-async function store_new_cbv_in_db(_obj_data: CBV, _api_endpoint: string, _api_key: string) {
-  
+async function store_new_cbv_in_db(_obj_data: CBV, _api_endpoint: string): Promise<void> {
+  // TODO:create a function to be sure that this value is stored.
+  await fetch(_api_endpoint, {
+    method: "POST",
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify( {query: `query: ${_obj_data}`} )
+  })
+  //idea, pasar dentro del object data, como un campo mas, la key hasheada, en el back end revisar que coincidan y guardar todo sin el key
 }
