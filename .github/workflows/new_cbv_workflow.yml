@@ -24,7 +24,7 @@ jobs:
         id: deno
         run: |
           touch DENO_OUTPUT.txt
-          deno run --allow-write --allow-read --allow-env .github/scripts/mod.ts "${{ github.event.issue.body }}" ${{ secrets.API_ENDPOINT }} ${{ secrets.API_KEY_1 }} ${{ secrets.API_KEY_2 }} ${{ github.event.issue.labels }}>> DENO_OUTPUT.txt
+          deno run --allow-write --allow-read --allow-env .github/scripts/mod.ts "${{ github.event.issue.body }}" ${{ secrets.API_ENDPOINT }} ${{ secrets.API_KEY_1 }} ${{ secrets.API_KEY_2 }} ${{ toJson(github.event.issue.labels) }}>> DENO_OUTPUT.txt
     
       - name: Commit files
         run: .github/scripts/commit.sh
