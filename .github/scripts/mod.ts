@@ -2,76 +2,26 @@ import { KeyStack  } from "https://deno.land/std@0.170.0/crypto/mod.ts";
 import { ensureDir } from "https://deno.land/std@0.171.0/fs/mod.ts";
 const data_given_by_gh: string[] = Deno.args;
 /*
-* First argument is going to be an object containing the new CBV to be added
-* Second argument is the API v1 GraphQL endpoint to store the CBV
-* Third argument is going to be the first Key to validate the store endpoint
-* Forth argument is going to be the second Key to validate the store endpoint
+* Firt argument is going to be an object containing the labels
+* Second argument is going to be an object containing the new CBV to be added
+* Third argument is the API v1 GraphQL endpoint to store the CBV
+* Forth argument is going to be the first Key to validate the store endpoint
+* Fifth argument is going to be the second Key to validate the store endpoint
 */
-
-const MARKDOWN = `### Title
-  
-New test 
-
-### Short description
-
- new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test 
-
-### Blockchain
-
-Bitcoin
-
-### Version affected
-
- new test new test new test  new test new test new test 
-
-### Component
-
- new test new test new test 
-
-### Severity
-
-9.5
-
-### Vulnerability Type
-
-NEW VULNERABILITY
-
-### Details
-
- new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test 
-
-### Recommendation
-
- new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test  new test new test new test 
-
-### References
-
-_No response_
-
-### Labels
-
-Layer 1, Layer 2
-
-### Test
-
-_No response_
-
-### Aditional comments
-
-_No response_
-
-### Code of Conduct
-
-- [X] I agree to follow this project's Code of Conduct`
 
 main(data_given_by_gh)
 async function main(args: string[]) {
 
-  const keyStack = new KeyStack([args[2]]);
-  const digest = await keyStack.sign([args[3]]);
+  const labels = args[0];
+  if (!labels.includes("Accepted")) {
+    console.log("Not accepted")
+    Deno.exit(0)
+  }
+  const keyStack = new KeyStack([args[3]]);
+  const digest = await keyStack.sign([args[4]]);
   
-  const raw_form_data = args[0] || MARKDOWN;
-  const api_endpoint = args[1];
+  const raw_form_data = args[1]
+  const api_endpoint = args[2];
   const api_key = digest;
   
 
