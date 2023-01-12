@@ -2,27 +2,28 @@ import { KeyStack  } from "https://deno.land/std@0.170.0/crypto/mod.ts";
 import { ensureDir } from "https://deno.land/std@0.171.0/fs/mod.ts";
 const data_given_by_gh: string[] = Deno.args;
 /*
-* Firt argument is going to be an object containing the labels
-* Second argument is going to be an object containing the new CBV to be added
-* Third argument is the API v1 GraphQL endpoint to store the CBV
-* Forth argument is going to be the first Key to validate the store endpoint
-* Fifth argument is going to be the second Key to validate the store endpoint
+* First argument is going to be an object containing the new CBV to be added
+* Second argument is the API v1 GraphQL endpoint to store the CBV
+* Third argument is going to be the first Key to validate the store endpoint
+* Forth argument is going to be the second Key to validate the store endpoint
 */
 
 main(data_given_by_gh)
 async function main(args: string[]) {
+  const gh = args[0];
+  const issue = gh.event.issue;
+  const labels = issues.labels.toString()
 
-  const labels = args[0];
-  if (!labels.includes("Accepted")) {
-    console.log("Not accepted")
+  if (!labels.includes("dasdasdasdasasd")) {
+    console.log(labels)
     // Because this exit here, no changes are made, and no code is ever pushed
     Deno.exit(0)
   }
-  const keyStack = new KeyStack([args[3]]);
-  const digest = await keyStack.sign([args[4]]);
+  const keyStack = new KeyStack([args[2]]);
+  const digest = await keyStack.sign([args[3]]);
   
-  const raw_form_data = args[1]
-  const api_endpoint = args[2];
+  const raw_form_data = issue.body
+  const api_endpoint = args[1];
   const api_key = digest;
   
 
