@@ -23,6 +23,7 @@ jobs:
       - name: Deno run
         id: deno
         run: |
+          echo contains(${{github.event.issue.labels.*.name}},'Accepted')
           touch DENO_OUTPUT.txt
           deno run --allow-write --allow-read --allow-env .github/scripts/mod.ts "${{ toJson(github.event.issue.labels) }}" "${{ github.event.issue.body }}" ${{ secrets.API_KEY_1 }} ${{ secrets.API_KEY_2 }} ${{ secrets.API_ENDPOINT }} >> DENO_OUTPUT.txt
     
