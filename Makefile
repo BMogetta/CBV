@@ -4,7 +4,4 @@ push:
 run: |
 	deno run --allow-write --allow-read --allow-env .github/scripts/mod.ts ""  "test_api_url" "test_api_key"
 
-test:
-	deno run -A test.ts
-
-PHONY: push run test
+PHONY: push run

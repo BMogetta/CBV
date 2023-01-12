@@ -15,9 +15,10 @@ async function main(args: Array<string>) {
   
   // LABELS
   const issue_labels = args[0];
-  const is_accepted = issue_labels.match(/: Accepted/);
+  const is_accepted = issue_labels.match(/Accepted/);
   if (!is_accepted) {
     // Because this exit here, no changes are made, and no code is ever pushed
+    console.log("Not accepted")
     Deno.exit(0)
   }
   // BODY
