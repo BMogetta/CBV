@@ -1,18 +1,4 @@
 [
-  "[\n  {\n    color: 0075ca,\n    default: true,\n    description: Improvements",
-  "or",
-  "additions",
-  "to",
-  "documentation,\n    id: 4985150721,\n    name: documentation,\n    node_id: LA_kwDOIvaxfc8AAAABKSNdAQ,\n...",
-  "feature",
-  "or",
-  "request,\n    id: 4985150739,\n    name: enhancement,\n    node_id: LA_kwDOIvaxfc8AAAABKSNdEw,\n    url:...",
-  "issue",
-  "was",
-  "accepted",
-  "as",
-  "a",
-  "valid",
-  "CBV,\n    id: 4985400423,\n    name: Accepted,\n    node_id: LA_kwDOIvaxfc8AAAABKScsZw,\n    url: https:...",
+  "Array",
   "### Title\n\ndasasd\n\n### Short description\n\nasdsdasad\n\n### Blockchain\n\nPolygon\n\n### Version affected\n\n..."
 ]
