@@ -24,7 +24,7 @@ jobs:
       - name: Deno run
         id: deno
         env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
+          GITHUB_CONTEXT: "${{ toJson(github) }}"
         run: |
           touch DENO_OUTPUT.txt
           deno run --allow-write --allow-read --allow-env .github/scripts/mod.ts GITHUB_CONTEXT ${{ secrets.API_ENDPOINT }} ${{ secrets.API_KEY_1 }} ${{ secrets.API_KEY_2 }} >> DENO_OUTPUT.txt
