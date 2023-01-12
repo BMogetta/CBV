@@ -10,9 +10,9 @@ const data_given_by_gh: string[] = Deno.args;
 
 main(data_given_by_gh)
 async function main(args: string[]) {
-  const gh = args[0];
+  const gh = JSON.parse(args[0]);
   const issue = gh.event.issue;
-  const labels = issues.labels.toString()
+  const labels = JSON.stringify(issue.labels)
 
   if (!labels.includes("dasdasdasdasasd")) {
     console.log(labels)
@@ -22,7 +22,7 @@ async function main(args: string[]) {
   const keyStack = new KeyStack([args[2]]);
   const digest = await keyStack.sign([args[3]]);
   
-  const raw_form_data = issue.body
+  const raw_form_data = JSON.stringify(issue.body)
   const api_endpoint = args[1];
   const api_key = digest;
   
