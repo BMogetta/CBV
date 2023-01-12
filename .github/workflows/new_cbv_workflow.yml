@@ -7,11 +7,14 @@ on:
 jobs:
   update-CBV-index:
 # labels includes [Accepted] ? store DB and upload new .md file : break without commit
-    if: contains(${{github.event.issue.labels.*.name}},'Accepted')
     name: folder scan
     runs-on: ubuntu-20.04
     permissions: write-all
     steps:
+
+      - name: label
+        if: contains(${{github.event.issue.labels.*.name}},'Accepted') == 0
+        run: exit 0
       - name: Checkout
         uses: actions/checkout@v3
     
@@ -28,6 +31,7 @@ jobs:
           deno run --allow-write --allow-read --allow-env .github/scripts/mod.ts "${{ toJson(github.event.issue.labels) }}" "${{ github.event.issue.body }}" ${{ secrets.API_KEY_1 }} ${{ secrets.API_KEY_2 }} ${{ secrets.API_ENDPOINT }} >> DENO_OUTPUT.txt
     
       - name: Commit files
+        
         run: .github/scripts/commit.sh
       
       - name: push changes
