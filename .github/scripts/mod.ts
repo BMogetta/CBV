@@ -4,28 +4,33 @@ import { ensureDir } from "https://deno.land/std@0.171.0/fs/mod.ts";
 const data_given_by_gh: Array<string> = Deno.args;
 /*
 * First argument is going to be an object containing the new CBV to be added
+* Labels
 * Second argument is the API v1 GraphQL endpoint to store the CBV
 * Third argument is going to be the first Key to validate the store endpoint
 * Forth argument is going to be the second Key to validate the store endpoint
-* Labels
 */
 
 main(data_given_by_gh)
 async function main(args: Array<string>) {
-  const body = args[0];
-  const labels = args[4]
-
+  
+  // LABELS
+  const labels = args[0]
   if (!labels.includes("dasdasdasdasasd")) {
     console.log(labels)
     // Because this exit here, no changes are made, and no code is ever pushed
     Deno.exit(0)
   }
+  // BODY
+  const body = args[1];
+  const raw_form_data = JSON.stringify(body)
+  
+  // KEYS
   const keyStack = new KeyStack([args[2]]);
   const digest = await keyStack.sign(args[3]);
-  
-  const raw_form_data = JSON.stringify(body)
-  const api_endpoint = args[1];
   const api_key = digest;
+  
+  // END POINT
+  const api_endpoint = args[4];
   
 
   // create a new cbv
