@@ -5,16 +5,25 @@ on:
     types: [closed]
 
 jobs:
+  labels:
+    name: label scan
+    runs-on: ubuntu-20.04
+    outputs:
+      status: ${{ steps.early.conclusion }}
+    steps:
+      - name: Check label
+        id: early
+        if: contains(${{github.event.issue.labels.*.name}},'Accepted') == 1
+        run: exit 0
+    
   update-CBV-index:
-# labels includes [Accepted] ? store DB and upload new .md file : break without commit
-    name: folder scan
+    name: processing files
+    needs: labels
+    if: needs.labels.outputs.status == 'success'
     runs-on: ubuntu-20.04
     permissions: write-all
     steps:
 
-      - name: label
-        if: contains(${{github.event.issue.labels.*.name}},'Accepted') == 0
-        run: exit 0
       - name: Checkout
         uses: actions/checkout@v3
     
