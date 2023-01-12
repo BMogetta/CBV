@@ -1,4 +1,7 @@
 [
-  "Array",
-  "### Title\n\ndasasd\n\n### Short description\n\nasdsdasad\n\n### Blockchain\n\nPolygon\n\n### Version affected\n\n..."
+  "[\n  documentation,\n  enhancement\n]",
+  "### Title\n\ndasasd\n\n### Short description\n\nasdsdasad\n\n### Blockchain\n\nPolygon\n\n### Version affected\n\n...",
+  "sadasdsadasdasdasd",
+  "dasdsasdaasdasdasdasd",
+  "https://cbv-api.deno.dev/graphql"
 ]
