@@ -1,18 +1,18 @@
 import { KeyStack  } from "https://deno.land/std@0.170.0/crypto/mod.ts";
 import { ensureDir } from "https://deno.land/std@0.171.0/fs/mod.ts";
 
-const data_given_by_gh: Array<string> = Deno.args;
-/*
-* First argument is going to be an object containing the new CBV to be added
-* Labels
-* Second argument is the API v1 GraphQL endpoint to store the CBV
-* Third argument is going to be the first Key to validate the store endpoint
-* Forth argument is going to be the second Key to validate the store endpoint
-*/
-
-main(data_given_by_gh)
-async function main(args: Array<string>) {
+main()
+async function main() {
   
+  const data_given_by_gh: Array<string> = Deno.args;
+  /*
+  * First argument is going to be an array containing the labels
+  * Second argument is going to be an object containing the new CBV to be added
+  * Third argument is the API v1 GraphQL endpoint to store the CBV
+  * Forth argument is going to be the first Key to validate the store endpoint
+  * Fifth argument is going to be the second Key to validate the store endpoint
+  */
+
   // LABELS
   const issue_labels = data_given_by_gh[0];
   const is_accepted = issue_labels.match(/Accepted/);
@@ -43,7 +43,6 @@ async function main(args: Array<string>) {
   // Store the new CBV in Issues folder TODO: check if multiples bc gives back string or array
   await store_new_cbv_in_folder(new_cbv_code_name, cbv_ready_to_be_stored, brokedown_form);
 
-  //TODO: call store endpoind (CBV, key) and save the new CBV in DB
   await store_new_cbv_in_db(brokedown_form, api_endpoint);
 
   /*
@@ -65,12 +64,6 @@ async function get_new_cbv_code_name (): Promise<string> {
     const current_file_number = Number(file_name.replace(/\D/g,''));
     if (current_file_number > last_cbv_added) last_cbv_added = current_file_number;
   });
-  /*
-  for await (const dirEntry of Deno.readDir(`${Deno.cwd()}/issues`)) {
-    const current_file_number = Number(dirEntry.name.replace(/\D/g,''));
-    if (current_file_number > last_cbv_added) last_cbv_added = current_file_number;
-  }
-  */
 
   // name the next file, allways replace with current year
   const new_cbv_number = (last_cbv_added + 1).toString().slice(2);
@@ -212,7 +205,8 @@ async function store_new_cbv_in_db(_obj_data: CBV, _api_endpoint: string): Promi
   await fetch(_api_endpoint, {
     method: "POST",
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify( {query: `query: ${_obj_data}`} )
-  })
-  //idea, pasar dentro del object data, como un campo mas, la key hasheada, en el back end revisar que coincidan y guardar todo sin el key
+    body: JSON.stringify( {mutation: `store_cbv: cbv: ${_obj_data}`} )
+  }).then(async (response) => 
+    await Deno.writeTextFile(`${Deno.cwd()}/response.txt`, JSON.stringify(response))
+    )
 }
