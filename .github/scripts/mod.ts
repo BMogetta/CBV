@@ -1,6 +1,7 @@
 import { KeyStack  } from "https://deno.land/std@0.170.0/crypto/mod.ts";
 import { ensureDir } from "https://deno.land/std@0.171.0/fs/mod.ts";
-const data_given_by_gh: string[] = Deno.args;
+
+const data_given_by_gh: Array<string> = Deno.args;
 /*
 * First argument is going to be an object containing the new CBV to be added
 * Second argument is the API v1 GraphQL endpoint to store the CBV
@@ -9,8 +10,8 @@ const data_given_by_gh: string[] = Deno.args;
 */
 
 main(data_given_by_gh)
-async function main(args: string[]) {
-  const gh = JSON.parse(args[0]);
+async function main(args: Array<string>) {
+  const gh = JSON.parse(JSON.stringify(args[0]))
   const issue = gh.event.issue;
   const labels = JSON.stringify(issue.labels)
 
