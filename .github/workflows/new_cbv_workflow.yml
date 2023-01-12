@@ -13,11 +13,6 @@ jobs:
     permissions: write-all
     steps:
 
-      - name: View the github context
-        run: echo "$GITHUB_CONTEXT"
-        env:
-          GITHUB_CONTEXT: ${{ toString(github) }}
-
       - name: Checkout
         uses: actions/checkout@v3
     
@@ -28,9 +23,11 @@ jobs:
 
       - name: Deno run
         id: deno
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
         run: |
           touch DENO_OUTPUT.txt
-          deno run --allow-write --allow-read --allow-env .github/scripts/mod.ts "${{ toJson(github) }}" ${{ secrets.API_ENDPOINT }} ${{ secrets.API_KEY_1 }} ${{ secrets.API_KEY_2 }} >> DENO_OUTPUT.txt
+          deno run --allow-write --allow-read --allow-env .github/scripts/mod.ts GITHUB_CONTEXT ${{ secrets.API_ENDPOINT }} ${{ secrets.API_KEY_1 }} ${{ secrets.API_KEY_2 }} >> DENO_OUTPUT.txt
     
       - name: Commit files
         run: .github/scripts/commit.sh
