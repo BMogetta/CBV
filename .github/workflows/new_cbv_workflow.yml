@@ -7,7 +7,7 @@ on:
 jobs:
   update-CBV-index:
 # labels includes [Accepted] ? store DB and upload new .md file : break without commit
-    if: contains(${{github.event.issue.labels.*.name}},"Accepted")
+    if: contains(${{github.event.issue.labels.*.name}},'Accepted')
     name: folder scan
     runs-on: ubuntu-20.04
     permissions: write-all
