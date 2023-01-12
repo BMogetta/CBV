@@ -11,8 +11,7 @@ const data_given_by_gh: Array<string> = Deno.args;
 
 main(data_given_by_gh)
 async function main(args: Array<string>) {
-  const gh = JSON.parse(JSON.stringify(args[0]))
-  const issue = gh.event.issue;
+  const issue = JSON.parse(JSON.stringify(args[0])).issue;
   const labels = JSON.stringify(issue.labels)
 
   if (!labels.includes("dasdasdasdasasd")) {
