@@ -5,27 +5,13 @@ on:
     types: [closed]
 
 jobs:
-  labels:
-    name: label scan
-    runs-on: ubuntu-20.04
-    outputs:
-      status: ${{ steps.early.conclusion }}
-    steps:
-      - name: Check label
-        id: early
-        if: contains(${{github.event.issue.labels.*.name}},'Accepted') == 0
-        run: |
-          echo 'Issue was accepted'
-          exit 0
-    
   update-CBV-index:
-    name: processing files
-    needs: labels
-    if: needs.labels.outputs.status == 'success'
+# labels includes [Accepted] ? store DB and upload new .md file : break without commit
+    if: contains(${{github.event.issue.labels.*.name}},"Accepted")
+    name: folder scan
     runs-on: ubuntu-20.04
     permissions: write-all
     steps:
-
       - name: Checkout
         uses: actions/checkout@v3
     
@@ -37,10 +23,10 @@ jobs:
       - name: Deno run
         id: deno
         run: |
-          deno run --allow-write --allow-read --allow-env .github/scripts/mod.ts ${{ fromJSON(github.event.issue.labels) }} ${{ fromJSON(github.event.issue.body) }} ${{ secrets.API_KEY_1 }} ${{ secrets.API_KEY_2 }} ${{ secrets.API_ENDPOINT }} >> DENO_OUTPUT.txt
+          touch DENO_OUTPUT.txt
+          deno run --allow-write --allow-read --allow-env .github/scripts/mod.ts "${{ fromJSON(github.event.issue.labels) }}" "${{ github.event.issue.body }}"  ${{ secrets.API_KEY_1 }} ${{ secrets.API_KEY_2 }} ${{ secrets.API_ENDPOINT }}>> DENO_OUTPUT.txt
     
       - name: Commit files
-        
         run: .github/scripts/commit.sh
       
       - name: push changes
