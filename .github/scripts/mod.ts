@@ -14,15 +14,14 @@ main(data_given_by_gh)
 async function main(args: Array<string>) {
   
   // LABELS
-  const labels = JSON.stringify(args[0]);
-  if (!labels.includes("\"name\": \"Accepted\"")) {
-    console.log(labels)
+  const issue_labels = JSON.parse(args[0]);
+  if (!issue_labels.find( (acp) => acp.name === "Accepted")) {
     // Because this exit here, no changes are made, and no code is ever pushed
     Deno.exit(0)
   }
   // BODY
-  const body = args[1];
-  const raw_form_data = JSON.stringify(body)
+  const issue_body = args[1];
+  const raw_form_data = issue_body;
   
   // KEYS
   const keyStack = new KeyStack([args[2]]);
