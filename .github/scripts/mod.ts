@@ -7,12 +7,13 @@ const data_given_by_gh: Array<string> = Deno.args;
 * Second argument is the API v1 GraphQL endpoint to store the CBV
 * Third argument is going to be the first Key to validate the store endpoint
 * Forth argument is going to be the second Key to validate the store endpoint
+* Labels
 */
 
 main(data_given_by_gh)
 async function main(args: Array<string>) {
-  const issue = JSON.parse(JSON.stringify(args[0])).issue;
-  const labels = JSON.stringify(issue.labels)
+  const body = args[0];
+  const labels = args[4]
 
   if (!labels.includes("dasdasdasdasasd")) {
     console.log(labels)
@@ -20,9 +21,9 @@ async function main(args: Array<string>) {
     Deno.exit(0)
   }
   const keyStack = new KeyStack([args[2]]);
-  const digest = await keyStack.sign([args[3]]);
+  const digest = await keyStack.sign(args[3]);
   
-  const raw_form_data = JSON.stringify(issue.body)
+  const raw_form_data = JSON.stringify(body)
   const api_endpoint = args[1];
   const api_key = digest;
   
