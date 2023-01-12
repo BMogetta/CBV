@@ -14,8 +14,9 @@ main(data_given_by_gh)
 async function main(args: Array<string>) {
   
   // LABELS
-  const issue_labels = JSON.parse(JSON.stringify(args[0]));
-  if (!issue_labels.find( (acp) => acp.name === "Accepted")) {
+  const issue_labels = JSON.parse(args[0]);
+  const is_accepted = issue_labels.find( a => a.name == "Accepted" )
+  if (!is_accepted) {
     // Because this exit here, no changes are made, and no code is ever pushed
     Deno.exit(0)
   }
