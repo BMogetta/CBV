@@ -16,7 +16,7 @@ jobs:
       - name: View the github context
         run: echo "$GITHUB_CONTEXT"
         env:
-          GITHUB_CONTEXT: ${{ github }}
+          GITHUB_CONTEXT: ${{ toString(github) }}
 
       - name: Checkout
         uses: actions/checkout@v3
