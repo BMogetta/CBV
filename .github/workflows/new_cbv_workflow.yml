@@ -13,8 +13,10 @@ jobs:
     steps:
       - name: Check label
         id: early
-        if: contains(${{github.event.issue.labels.*.name}},'Accepted') == 1
-        run: exit 0
+        if: contains(${{github.event.issue.labels.*.name}},'Accepted') == 0
+        run: |
+          echo 'Issue was accepted'
+          exit 0
     
   update-CBV-index:
     name: processing files
