@@ -14,7 +14,7 @@ main(data_given_by_gh)
 async function main(args: Array<string>) {
   
   // LABELS
-  const labels = args[0]
+  const labels = JSON.stringify(args[0]);
   if (!labels.includes("dasdasdasdasasd")) {
     console.log(labels)
     // Because this exit here, no changes are made, and no code is ever pushed
