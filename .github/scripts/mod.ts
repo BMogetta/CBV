@@ -14,24 +14,24 @@ main(data_given_by_gh)
 async function main(args: Array<string>) {
   
   // LABELS
-  const issue_labels = args[0];
+  const issue_labels = data_given_by_gh[0];
   const is_accepted = issue_labels.match(/Accepted/);
   if (!is_accepted) {
     // Because this exit here, no changes are made, and no code is ever pushed
-    console.log(args)
+    console.log(data_given_by_gh)
     Deno.exit(0)
   }
   // BODY
-  const issue_body = args[1];
+  const issue_body = data_given_by_gh[1];
   const raw_form_data = issue_body;
   
   // KEYS
-  const keyStack = new KeyStack([args[2]]);
-  const digest = await keyStack.sign(args[3]);
+  const keyStack = new KeyStack([data_given_by_gh[2]]);
+  const digest = await keyStack.sign(data_given_by_gh[3]);
   const api_key = digest;
   
   // END POINT
-  const api_endpoint = args[4];
+  const api_endpoint = data_given_by_gh[4];
   
 
   // create a new cbv
