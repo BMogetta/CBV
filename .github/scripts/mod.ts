@@ -15,6 +15,7 @@ async function main(args: string[]) {
   const labels = args[0];
   if (!labels.includes("Accepted")) {
     console.log("Not accepted")
+    // Because this exit here, no changes are made, and no code is ever pushed
     Deno.exit(0)
   }
   const keyStack = new KeyStack([args[3]]);
